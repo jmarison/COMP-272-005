@@ -1,6 +1,6 @@
 /******************************************************************
  *
- *   YOUR NAME / SECTION NUMBER
+ *   Jacob Marison / 272 002
  *
  *   This java file contains the problem solutions of isSubSet, findKthLargest,
  *   and sort2Arrays methods. You should utilize the Java Collection Framework for
@@ -32,9 +32,20 @@ class ProblemSolutions {
 
     public boolean isSubset(int list1[], int list2[]) {
 
-        // ADD YOU CODE HERE -- DON'T FORGET TO ADD YOR NAME AT TOP OF FILE
+        Hashtable<Integer, Boolean> lista = new Hashtable<>();
 
-        return false;
+        for(int i = 0; i < list1.length; i++) {
+            lista.put(list1[i], true);
+        }
+
+        for(int j = 0; j < list2.length; j++) {
+            if(!lista.containsKey(list2[j])) {
+                return false;
+            }
+            lista.remove(list2[j]);
+        }
+
+        return true;
     }
 
 
@@ -54,8 +65,18 @@ class ProblemSolutions {
     public int findKthLargest(int[] array, int k) {
 
         // ADD YOUR CODE HERE
+        //make priorty queue and store all input elements and then go to kth element
 
-        return 0;
+        PriorityQueue<Integer> queue = new PriorityQueue<>(k);
+
+        for(int i = 0; i < array.length; i++) {
+            queue.add(array[i]);
+            if(queue.size() > k) {
+                queue.poll();
+            }
+        }
+
+        return queue.peek();
     }
 
 
@@ -75,8 +96,26 @@ class ProblemSolutions {
     public int[] sort2Arrays(int[] array1, int[] array2) {
 
         // ADD YOU CODE HERE
+        //add elements to a priorty queue then return all elements of queue
+        //min queue to maintain numerical order
 
-        return null;
+        int totalElements = array1.length + array2.length;
+        PriorityQueue<Integer> queue = new PriorityQueue<>(totalElements);
+        int[] result = new int[totalElements];
+        int j = 0;
+        for(int i = 0; i < array1.length; i++) {
+            queue.add(array1[i]);
+        }
+
+
+        for(int i = 0; i < array2.length; i++) {
+            queue.add(array2[i]);
+        }
+        while (!queue.isEmpty()) {
+            result[j++] = queue.poll();
+        }
+
+        return result;
     }
 
 }

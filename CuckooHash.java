@@ -1,6 +1,6 @@
 /******************************************************************
  *
- *   YOUR NAME / SECTION NUMBER
+ *   Jacob Marison / 272 002
  *
  *   Note, additional comments provided throughout this source code
  *   is for educational purposes
@@ -250,7 +250,48 @@ public class CuckooHash<K, V> {
 		// Also make sure you read this method's prologue above, it should help
 		// you. Especially the two HINTS in the prologue.
 
-		return;
+		int numberRenests = 0;
+		K kToInsert = key;
+		V vToInsert = value;
+		int oldPosition = -1;
+		Set<Integer> visited = new HashSet<>();
+
+
+		if ((table[hash1(kToInsert)] != null && table[hash1(kToInsert)].getBucKey().equals(kToInsert) && table[hash1(kToInsert)].getValue().equals(vToInsert)) ||
+				(table[hash2(kToInsert)] != null && table[hash2(kToInsert)].getBucKey().equals(kToInsert) && table[hash2(kToInsert)].getValue().equals(vToInsert))) {
+
+			return; // Duplicate k,v check
+		}
+
+		while(numberRenests < CAPACITY) {
+
+			int newPosition = (hash1(kToInsert) == oldPosition) ?  hash2(kToInsert) : hash1(kToInsert);
+
+			if(visited.contains(newPosition)) {
+				rehash();
+				break;
+			}
+			visited.add(newPosition);
+
+			if(table[newPosition] == null) {
+				table[newPosition] = new Bucket<K, V>(kToInsert, vToInsert);
+				return;
+			} else {
+				Bucket<K, V> temp = table[newPosition];
+				table[newPosition] = new Bucket<K, V>(kToInsert, vToInsert);
+				kToInsert = temp.getBucKey();
+				vToInsert = temp.getValue();
+				oldPosition = newPosition;
+			}
+
+			numberRenests++;
+		}
+
+		if(numberRenests == CAPACITY) {
+			rehash();
+		}
+		put(kToInsert, vToInsert);
+
 	}
 
 
